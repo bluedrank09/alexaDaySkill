@@ -28,7 +28,7 @@ class LaunchRequestHandler(AbstractRequestHandler):
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
-        speak_output = "Hello, I am your day helper. I will tell you the day today"
+        speak_output = "Hello, I am your day helper. I can tell you the day or the time. Which would you like?"
 
         return (
             handler_input.response_builder
@@ -70,7 +70,26 @@ class DayTellerIntentHandler(AbstractRequestHandler):
         return (
             handler_input.response_builder
                 .speak(speak_output)
-                # .ask("add a reprompt if you want to keep the session open for the user to respond")
+                #.ask("add a reprompt if you want to keep the session open for the user to respond")
+                .response
+        )
+
+class TimeTellerIntentHandler(AbstractRequestHandler):
+    """Handler for Hello World Intent."""
+    def can_handle(self, handler_input):
+        # type: (HandlerInput) -> bool
+        return ask_utils.is_intent_name("TimeTellerIntent")(handler_input)
+
+    def handle(self, handler_input):
+        # type: (HandlerInput) -> Response
+        time = datetime.datetime.now()
+        timeString = time.strftime("%I:%M:%S")
+        speak_output = f"The time right now is {timeString}"
+
+        return (
+            handler_input.response_builder
+                .speak(speak_output)
+                #.ask(speak_output)
                 .response
         )
 
@@ -178,6 +197,7 @@ class CatchAllExceptionHandler(AbstractExceptionHandler):
 sb = SkillBuilder()
 
 sb.add_request_handler(DayTellerIntentHandler())
+sb.add_request_handler(TimeTellerIntentHandler())
 sb.add_request_handler(LaunchRequestHandler())
 sb.add_request_handler(HelloWorldIntentHandler())
 sb.add_request_handler(HelpIntentHandler())
