@@ -28,7 +28,7 @@ class LaunchRequestHandler(AbstractRequestHandler):
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
-        speak_output = "Hello, I am your day helper. I can tell you the day or the time. Which would you like?"
+        speak_output = "Hello, I am your day helper. I can tell you the day, the date, or the time. Which would you like?"
 
         return (
             handler_input.response_builder
@@ -47,12 +47,12 @@ class HelloWorldIntentHandler(AbstractRequestHandler):
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
         day = datetime.datetime.now()
-        speak_output = f"Hello gayathri, this is your day teller"
+        speak_output = f"Ram ram gayathri, this is your day teller"
 
         return (
             handler_input.response_builder
                 .speak(speak_output)
-                # .ask("add a reprompt if you want to keep the session open for the user to respond")
+                .ask("add a reprompt if you want to keep the session open for the user to respond")
                 .response
         )
 
@@ -65,12 +65,32 @@ class DayTellerIntentHandler(AbstractRequestHandler):
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
         day = datetime.datetime.now()
-        speak_output = f"The day today is {day.strftime('%A')}"
+        speak_output = f"The day today is {day.strftime('%A')}. Would you like another option? There is date and time"
 
         return (
             handler_input.response_builder
                 .speak(speak_output)
-                #.ask("add a reprompt if you want to keep the session open for the user to respond")
+                .ask("Would you like another option? There is date and time")
+                .response
+        )
+
+class DateTellerIntentHandler(AbstractRequestHandler):
+    """Handler for Hello World Intent."""
+    def can_handle(self, handler_input):
+        # type: (HandlerInput) -> bool
+        return ask_utils.is_intent_name("DateTellerIntent")(handler_input)
+
+    def handle(self, handler_input):
+        # type: (HandlerInput) -> Response
+        date = datetime.datetime.now()
+        dateString = date.strftime("%d")
+        dateStringTwo = date.strftime("%B %Y")
+        speak_output = f"The date today is {dateString} of {dateStringTwo}. Would you like another option? There is day and time"
+
+        return (
+            handler_input.response_builder
+                .speak(speak_output)
+                .ask("Would you like another ")
                 .response
         )
 
@@ -84,12 +104,12 @@ class TimeTellerIntentHandler(AbstractRequestHandler):
         # type: (HandlerInput) -> Response
         time = datetime.datetime.now()
         timeString = time.strftime("%I:%M:%S")
-        speak_output = f"The time right now is {timeString}"
+        speak_output = f"The time right now is {timeString}. Would you like another option? There is date and day"
 
         return (
             handler_input.response_builder
                 .speak(speak_output)
-                #.ask(speak_output)
+                .ask("Would you like another option? There is date and day")
                 .response
         )
 
@@ -102,7 +122,7 @@ class HelpIntentHandler(AbstractRequestHandler):
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
-        speak_output = "You can say hello to me! How can I help?"
+        speak_output = "Hello! How can I help?"
 
         return (
             handler_input.response_builder
@@ -121,7 +141,7 @@ class CancelOrStopIntentHandler(AbstractRequestHandler):
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
-        speak_output = "Goodbye!"
+        speak_output = "Hara hara sankara Gayathri. Bye bye!"
 
         return (
             handler_input.response_builder
@@ -197,6 +217,7 @@ class CatchAllExceptionHandler(AbstractExceptionHandler):
 sb = SkillBuilder()
 
 sb.add_request_handler(DayTellerIntentHandler())
+sb.add_request_handler(DateTellerIntentHandler())
 sb.add_request_handler(TimeTellerIntentHandler())
 sb.add_request_handler(LaunchRequestHandler())
 sb.add_request_handler(HelloWorldIntentHandler())
